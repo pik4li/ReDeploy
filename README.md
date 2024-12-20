@@ -55,6 +55,7 @@ docker compose up
 ```bash
 # script variables
 ./redeploy.sh --script <REPO> <BRANCH> <COMMAND>
+
 # Basic usage with public repository
 ./redeploy.sh --script "https://github.com/your/hugo/repo"
 
