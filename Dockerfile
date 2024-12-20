@@ -21,8 +21,6 @@ RUN chmod +x check-updates.sh
 ENTRYPOINT ["/bin/sh", "-c", "/root/setup/redeploy.sh & /root/setup/check-updates.sh"]
 
 # Add these lines if they don't exist
-ENV GIT_TOKEN=""
 ENV REPO=""
 ENV BRANCH="main"
-ENV COMMAND=""
 ENV CHECK_INTERVAL="300"
