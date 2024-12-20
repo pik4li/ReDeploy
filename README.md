@@ -115,29 +115,3 @@ services:
     env_file:
       - .env
 ```
-
-## Building from Source
-
-1. Clone this repository:
-
-```bash
-git clone
-```
-
-2. Build the Docker image:
-
-```bash
-make build
-```
-
-3. Edit the `.env` file:
-
-```bash
-nvim .env
-```
-
-4. Run the Docker container:
-
-```bash
-docker compose up -d
-```
