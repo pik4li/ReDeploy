@@ -21,10 +21,16 @@ A lightweight, self-hosted Docker tool to deploy Git-hosted sites locally. Clone
 
 ### Using Docker Compose
 
-1. Clone the repository:
+1. Create a `docker-compose.yml` file:
 
-```bash
-git clone https://github.com/pik4li/redeploy
+```yaml
+services:
+  redeploy:
+    image: ghcr.io/pik4li/redeploy:latest
+    ports:
+      - "1313:1313"
+    env_file:
+      - .env
 ```
 
 2. Create/Edit the `.env` file (**[available variables](#environment-variables)**):
@@ -50,21 +56,6 @@ docker compose up
 
 5. If you have a reverseproxy already running, you can point it to the container's port to have a local cloudflare pages like experience with automatic redeployment.
 
-### Using the Script Directly
-
-```bash
-# script variables
-./redeploy.sh --script <REPO> <BRANCH> <COMMAND>
-
-# Basic usage with public repository
-./redeploy.sh --script "https://github.com/your/hugo/repo"
-
-# With custom build command
-./redeploy.sh --script "https://github.com/your/hugo/repo" "main" "npm install && npm run dev"
-
-# With private repository (using GIT_TOKEN)
-GIT_TOKEN=your_token ./hugo-website.sh --script "https://github.com/your/hugo/repo"
-```
 
 ## Environment Variables
 
@@ -87,15 +78,28 @@ The application supports various custom commands that will automatically be conf
 - `hugo server`
 - `hugo server -D`
 
-## Docker Compose Example without .env file
+## Docker Compose Examples
+
+### Basic Example with .env file
 
 ```yaml
 services:
   redeploy:
-    build:
-      dockerfile: ./Dockerfile
+    image: ghcr.io/pik4li/redeploy:latest
     ports:
-      - "1313:1313" # Map container port 1313 to host port 8080
+      - "1313:1313"
+    env_file:
+      - .env
+```
+
+### Example without .env file
+
+```yaml
+services:
+  redeploy:
+    image: ghcr.io/pik4li/redeploy:latest
+    ports:
+      - "1313:1313"
     environment:
       - REPO=${REPO}
       - GIT_TOKEN=${GIT_TOKEN}
@@ -103,15 +107,18 @@ services:
       - CHECK_INTERVAL=${CHECK_INTERVAL}
 ```
 
-## Docker Compose Example with .env file
+### Using the Script Directly
 
-```yaml
-services:
-  redeploy:
-    build:
-      dockerfile: ./Dockerfile
-    ports:
-      - "1313:1313" # Map container port 1313 to host port 8080
-    env_file:
-      - .env
+```bash
+# script variables
+./redeploy.sh --script <REPO> <BRANCH> <COMMAND>
+
+# Basic usage with public repository
+./redeploy.sh --script "https://github.com/your/hugo/repo"
+
+# With custom build command
+./redeploy.sh --script "https://github.com/your/hugo/repo" "main" "npm install && npm run dev"
+
+# With private repository (using GIT_TOKEN)
+GIT_TOKEN=your_token ./hugo-website.sh --script "https://github.com/your/hugo/repo"
 ```
