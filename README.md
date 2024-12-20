@@ -21,7 +21,13 @@ A lightweight, self-hosted Docker tool to deploy Git-hosted sites locally. Clone
 
 ### Using Docker Compose
 
-1. Create a `.env` file:
+1. Clone the repository:
+
+```bash
+git clone https://github.com/pik4li/redeploy
+```
+
+2. Create/Edit the `.env` file:
 
 ```bash
 # required
@@ -34,20 +40,26 @@ COMMAND=npm install && npm run dev # Optional: custom build command
 CHECK_INTERVAL=300 # Optional: interval in seconds to check for updates
 ```
 
-2. Run the container:
+3. Run the container:
 
 ```bash
-docker-compose up
+docker compose up
 ```
+
+4. Access the site at `http://localhost:1313` or `http://localhost:8080` (if you have a different port)
+
+5. If you have a reverseproxy already running, you can point it to the container's port to have a local cloudflare pages like experience with automatic redeployment.
 
 ### Using the Script Directly
 
 ```bash
+# script variables
+./redeploy.sh --script <REPO> <BRANCH> <COMMAND>
 # Basic usage with public repository
-./hugo-website.sh --script "https://github.com/your/hugo/repo"
+./redeploy.sh --script "https://github.com/your/hugo/repo"
 
 # With custom build command
-./hugo-website.sh --script "https://github.com/your/hugo/repo" "npm install && npm run dev"
+./redeploy.sh --script "https://github.com/your/hugo/repo" "main" "npm install && npm run dev"
 
 # With private repository (using GIT_TOKEN)
 GIT_TOKEN=your_token ./hugo-website.sh --script "https://github.com/your/hugo/repo"

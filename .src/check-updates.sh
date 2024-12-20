@@ -55,7 +55,7 @@ check_for_updates() {
       git pull origin "$BRANCH" > /dev/null 2>&1
       echo_info "Restarting Hugo server..."
       pkill -f "hugo server"  # Kill the existing Hugo server
-      /root/setup/hugo-website.sh & /root/setup/check-updates.sh # Restart the Hugo server and check for updates again
+      /root/setup/redeploy.sh & /root/setup/check-updates.sh # Restart the Hugo server and check for updates again
     fi
     
     sleep "$CHECK_INTERVAL"  # Wait for the specified interval before checking again
