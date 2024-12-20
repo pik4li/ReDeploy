@@ -1,6 +1,6 @@
 services:
   redeploy:
-    # build context | comment out when build successfully
+    # build context -> comment out when build successfully
     build:
       dockerfile: ./Dockerfile
     # image: redeploy:latest # uncomment, when image is already build with `make build`
