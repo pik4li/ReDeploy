@@ -27,7 +27,7 @@ A lightweight, self-hosted Docker tool to deploy Git-hosted sites locally. Clone
 git clone https://github.com/pik4li/redeploy
 ```
 
-2. Create/Edit the `.env` file (**[available variables](README.md#environment-variables)**):
+2. Create/Edit the `.env` file (**[available variables](#environment-variables)**):
 
 ```bash
 # required
