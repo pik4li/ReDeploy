@@ -1,7 +1,7 @@
 FROM alpine:latest
 
 # Grab the dependencies for the project
-RUN apk update && apk upgrade && apk add hugo git curl npm go
+RUN apk update && apk upgrade && apk add --no-cache hugo git curl npm go
 
 WORKDIR /root/setup
 
