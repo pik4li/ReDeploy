@@ -92,6 +92,10 @@ services:
       - .env
 ```
 
+> [!IMPORTANT]
+> The `.env` file is required for the container to work.
+> You can find the proper variables in the [Environment Variables](#environment-variables) section.
+
 ### Example without .env file
 
 ```yaml
@@ -101,24 +105,8 @@ services:
     ports:
       - "1313:1313"
     environment:
-      - REPO=${REPO}
-      - GIT_TOKEN=${GIT_TOKEN}
-      - COMMAND=${COMMAND}
-      - CHECK_INTERVAL=${CHECK_INTERVAL}
-```
-
-### Using the Script Directly
-
-```bash
-# script variables
-./redeploy.sh --script <REPO> <BRANCH> <COMMAND>
-
-# Basic usage with public repository
-./redeploy.sh --script "https://github.com/your/hugo/repo"
-
-# With custom build command
-./redeploy.sh --script "https://github.com/your/hugo/repo" "main" "npm install && npm run dev"
-
-# With private repository (using GIT_TOKEN)
-GIT_TOKEN=your_token ./hugo-website.sh --script "https://github.com/your/hugo/repo"
+      - REPO="https://github.com/your/hugo/repo"
+      - GIT_TOKEN="your_github_token"
+      - COMMAND="npm install && npm run dev"
+      - CHECK_INTERVAL="10"
 ```
