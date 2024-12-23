@@ -41,8 +41,8 @@ REPO=https://github.com/your/hugo/repo # leading https:// is not required!
 
 # optional
 BRANCH=main # Optional: for branch selection
-GIT_TOKEN=your_github_token # Optional: for private repositories
-COMMAND=npm install && npm run dev # Optional: custom build command
+GIT_TOKEN="your_github_token" # Optional: for private repositories
+COMMAND="npm install && npm run dev" # Optional: custom build command
 CHECK_INTERVAL=300 # Optional: interval in seconds to check for updates
 ```
 
