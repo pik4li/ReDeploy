@@ -96,6 +96,8 @@ services:
 > The `.env` file is required for the container to work.
 > You can find the proper variables in the [Environment Variables](#environment-variables) section.
 
+---
+
 ### Example without .env file
 
 ```yaml
