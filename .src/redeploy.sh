@@ -160,9 +160,20 @@ execute_custom_command() {
 
 # Function to write environment variables to a .env file
 write_env_file() {
+  token=$GIT_TOKEN
+
+  if [ -n "$GIT_TOKEN_FILE" ]; then
+    echo_info "GIT_TOKEN_FILE variable found - token will be read from $GIT_TOKEN_FILE"
+    if [ -e $GIT_TOKEN_FILE ]; then
+      token=$(cat $GIT_TOKEN_FILE)
+    else
+      echo_error "Could not read from file"
+    fi
+  fi
+
   cat <<EOF > /root/setup/.env
 _TEMPDIR=${_TEMPDIR}
-GIT_TOKEN=${GIT_TOKEN}
+GIT_TOKEN=${token}
 REPO=${REPO}
 BRANCH=${BRANCH:-main}
 COMMAND=${COMMAND}
