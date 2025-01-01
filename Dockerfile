@@ -1,7 +1,7 @@
 FROM alpine:latest
 
 # Grab the dependencies for the project
-RUN apk update && apk upgrade && apk add --no-cache hugo git curl npm go
+RUN apk update && apk add --no-cache --no-network hugo git npm go
 
 WORKDIR /root/setup
 
@@ -22,5 +22,4 @@ ENTRYPOINT ["/bin/sh", "-c", "/root/setup/redeploy.sh & /root/setup/check-update
 
 # Add these lines if they don't exist
 ENV REPO=""
-ENV BRANCH="main"
 ENV CHECK_INTERVAL="300"
