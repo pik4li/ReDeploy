@@ -64,6 +64,7 @@ docker compose up
 | REPO           | Yes      | URL of the Git repository                     | `https://github.com/user/repo` | -                                                |
 | BRANCH         | No       | The branch to use for cloning the site        | `main`                         | main                                             |
 | GIT_TOKEN      | No       | Authentication token for private repositories | `ghp_xxxxxxxxxxxx`             | -                                                |
+| GIT_TOKEN_FILE | No       | File to read GIT_TOKEN from                   | `/run/secrets/github_token`    | -                                                |
 | COMMAND        | No       | Custom build/run command                      | `npm install && npm run dev`   | `hugo server -D --noHTTPCache --disableFastRender` |
 | CHECK_INTERVAL | No       | Interval in seconds to check for updates      | `300`                          | 300                                              |
 
