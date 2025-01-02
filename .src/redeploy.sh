@@ -129,6 +129,9 @@ modify_hugo_command() {
     if ! echo "$cmd" | grep -q -- "--bind"; then
       cmd="$cmd --bind $(get_ip)"
     fi
+    if [ -n "$PORT" ]; then
+      cmd="$cmd --port $PORT"
+    fi
     # Add --baseURL if URL is set
     if [ -n "$URL" ]; then
       cmd="$cmd --baseURL $URL"

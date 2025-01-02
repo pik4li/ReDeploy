@@ -22,3 +22,5 @@ ENTRYPOINT ["/bin/sh", "-c", "/root/setup/redeploy.sh & /root/setup/check-update
 
 # Add these lines if they don't exist
 ENV CHECK_INTERVAL="300"
+ENV PORT="${PORT:-1313}"
+ENV BRANCH="${BRANCH:-main}"
