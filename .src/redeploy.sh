@@ -121,6 +121,7 @@ validate_url() {
   fi
 }
 
+
 # Modify Hugo commands to bind to all interfaces and set baseURL
 modify_hugo_command() {
   cmd="$1"
@@ -151,8 +152,30 @@ modify_npm_command() {
   echo "$cmd"
 }
 
+# Execute build command if provided
+execute_build_command() {
+  if [ -n "$BUILD" ]; then
+    echo_info "Executing build command: $BUILD"
+    
+    # Split multiple commands and process each one
+    echo "$BUILD" | tr '&&' '\n' | while read -r cmd; do
+      cmd=$(echo "$cmd" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+      
+      echo_info "Running build step: $cmd"
+      eval "${cmd}" || {
+        echo_error "Failed to execute build step: |${cmd}|"
+        exit 1
+      }
+    done
+    echo_info "Build completed successfully"
+  fi
+}
+
 # Execute custom commands
 execute_custom_command() {
+  # Execute build command first if it exists
+  execute_build_command
+  
   if [ -n "$COMMAND" ]; then
     echo_info "Executing custom command: $COMMAND"
 
