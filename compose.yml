@@ -7,4 +7,4 @@ services:
     ports:
       - "1313:1313" # Map container port 1313 to host port 8080
     env_file:
-      - .env
+      - .test.env

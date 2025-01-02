@@ -1,7 +1,7 @@
 FROM alpine:latest
 
 # Grab the dependencies for the project
-RUN apk update && apk add --no-cache --no-network hugo git npm go
+RUN apk update && apk add --no-cache hugo git npm go
 
 WORKDIR /root/setup
 
@@ -21,5 +21,4 @@ RUN chmod +x check-updates.sh
 ENTRYPOINT ["/bin/sh", "-c", "/root/setup/redeploy.sh & /root/setup/check-updates.sh"]
 
 # Add these lines if they don't exist
-ENV REPO=""
 ENV CHECK_INTERVAL="300"

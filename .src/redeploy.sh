@@ -99,9 +99,11 @@ _clone() {
   fi
 
   # Clone specific branch
-  git clone --depth=1 --recursive -b "$BRANCH" "$CLONE_URL" "app" && 
+  git clone --depth=1 --recursive -b "$BRANCH" "$CLONE_URL" "app" &&
     echo_note "Cloned $CLONE_URL (branch: $BRANCH) to $_TEMPDIR/app"
   cd "${_TEMPDIR}/app" || echo_error "${_TEMPDIR}/app is not a valid path!"
+  echo_info "Running go mod tidy..."
+  go mod tidy || echo_error "Failed to run go mod tidy"
 }
 
 # Deploy the Hugo server
@@ -109,12 +111,28 @@ _deploy() {
   hugo server -D --noHTTPCache --disableFastRender --bind "$(get_ip)" || echo_error "Hugo couldn't deploy the site"
 }
 
-# Modify Hugo commands to bind to all interfaces
+# Function to validate the URL
+validate_url() {
+  if [ -n "$URL" ]; then
+    if ! echo "$URL" | grep -qE '^https?://'; then
+      echo_error "Invalid URL: $URL. It must start with http:// or https://"
+      exit 1
+    fi
+  fi
+}
+
+# Modify Hugo commands to bind to all interfaces and set baseURL
 modify_hugo_command() {
   cmd="$1"
   # Check if it's a Hugo command and doesn't already have --bind
-  if echo "$cmd" | grep -q "hugo server" && ! echo "$cmd" | grep -q -- "--bind"; then
-    cmd="$cmd --bind $(get_ip)"
+  if echo "$cmd" | grep -q "hugo server"; then
+    if ! echo "$cmd" | grep -q -- "--bind"; then
+      cmd="$cmd --bind $(get_ip)"
+    fi
+    # Add --baseURL if URL is set
+    if [ -n "$URL" ]; then
+      cmd="$cmd --baseURL $URL"
+    fi
   fi
   echo "$cmd"
 }
@@ -141,8 +159,11 @@ execute_custom_command() {
 
       # Modify command based on type
       if echo "$cmd" | grep -q "hugo"; then
+        echo_info "Found hugo command"
         cmd=$(modify_hugo_command "$cmd")
-      elif echo "$cmd" | grep -q "npm"; then
+      fi
+      if echo "$cmd" | grep -q "npm"; then
+        echo_info "Found npm command"
         cmd=$(modify_npm_command "$cmd")
       fi
 
@@ -153,14 +174,16 @@ execute_custom_command() {
       }
     done
   else
-    echo_info "No custom command provided. Running default Hugo server."
-    _deploy
+    echo_info "No custom command provided. Starting with the default hugo command..."
+    COMMAND="hugo server -D --noHTTPCache --disableFastRender --bind $(get_ip)"
+    execute_custom_command
   fi
+  echo_info "Command to run: $COMMAND"
 }
 
 # Function to write environment variables to a .env file
 write_env_file() {
-  cat <<EOF > /root/setup/.env
+  cat <<EOF >/root/setup/.env
 _TEMPDIR=${_TEMPDIR}
 GIT_TOKEN=${GIT_TOKEN}
 REPO=${REPO}
@@ -173,11 +196,12 @@ EOF
 
 # Main function to execute
 _main() {
+  validate_url  # Validate the URL before proceeding
   if _deps; then
     sleep 1
     _clone
     sleep 1
-    write_env_file  # Write the environment variables to the .env file
+    write_env_file # Write the environment variables to the .env file
     execute_custom_command || echo_error "Failed to execute custom command!"
   fi
 }
@@ -189,7 +213,7 @@ _flag_script() {
     return 1
   fi
   REPO="$2"
-  
+
   # Set branch from argument or default to main
   if [ -n "$3" ]; then
     BRANCH="$3"
