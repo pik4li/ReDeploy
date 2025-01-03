@@ -220,6 +220,7 @@ write_env_file() {
     fi
   fi
 
+  cat <<EOF >/root/setup/.env
 _TEMPDIR=${_TEMPDIR}
 GIT_TOKEN=${token}
 REPO=${REPO}
