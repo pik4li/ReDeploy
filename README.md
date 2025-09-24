@@ -38,6 +38,7 @@ services:
 ```bash
 # required
 REPO=https://github.com/your/hugo/repo # leading https:// is not required!
+PROTOCOL=https # or http
 
 # optional
 BRANCH=main # Optional: for branch selection
