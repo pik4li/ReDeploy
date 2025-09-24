@@ -48,6 +48,8 @@ _env() {
   fi
   # Set default branch if not specified, using POSIX compliant syntax
   : "${BRANCH:=main}"
+  : "${PROTOCOL:=https}"
+
   # Create a persistent temp directory
   _TEMPDIR="/root/setup/tempdir"
   mkdir -p "$_TEMPDIR"
@@ -88,8 +90,9 @@ _clone() {
     return 0
   fi
 
-  # Clean up the REPO URL to prevent double https://
-  CLEANED_REPO=$(echo "$REPO" | sed 's|^https://||')
+  # Clean up the REPO URL to prevent double https:// and used the protocol
+  # provided by the user
+  CLEANED_REPO=${PROTOCOL:-https}://${REPO#https://}
 
   # Construct the clone URL based on whether GIT_TOKEN is provided
   if [ -n "$GIT_TOKEN" ]; then
@@ -120,7 +123,6 @@ validate_url() {
     fi
   fi
 }
-
 
 # Modify Hugo commands to bind to all interfaces and set baseURL
 modify_hugo_command() {
@@ -156,11 +158,11 @@ modify_npm_command() {
 execute_build_command() {
   if [ -n "$BUILD" ]; then
     echo_info "Executing build command: $BUILD"
-    
+
     # Split multiple commands and process each one
     echo "$BUILD" | tr '&&' '\n' | while read -r cmd; do
       cmd=$(echo "$cmd" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
-      
+
       echo_info "Running build step: $cmd"
       eval "${cmd}" || {
         echo_error "Failed to execute build step: |${cmd}|"
@@ -175,7 +177,7 @@ execute_build_command() {
 execute_custom_command() {
   # Execute build command first if it exists
   execute_build_command
-  
+
   if [ -n "$COMMAND" ]; then
     echo_info "Executing custom command: $COMMAND"
 
@@ -222,7 +224,7 @@ EOF
 
 # Main function to execute
 _main() {
-  validate_url  # Validate the URL before proceeding
+  validate_url # Validate the URL before proceeding
   if _deps; then
     sleep 1
     _clone
