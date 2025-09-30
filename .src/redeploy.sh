@@ -92,13 +92,13 @@ _clone() {
 
   # Clean up the REPO URL to prevent double https:// and used the protocol
   # provided by the user
-  CLEANED_REPO=${PROTOCOL:-https}://${REPO#https://}
+  CLEANED_REPO=${REPO#http*://}
 
   # Construct the clone URL based on whether GIT_TOKEN is provided
   if [ -n "$GIT_TOKEN" ]; then
-    CLONE_URL="https://${GIT_TOKEN}@${CLEANED_REPO}"
+    CLONE_URL="${PROTOCOL}://${GIT_TOKEN}@${CLEANED_REPO}"
   else
-    CLONE_URL="https://${CLEANED_REPO}"
+    CLONE_URL="${PROTOCOL}://${CLEANED_REPO}"
   fi
 
   # Clone specific branch

@@ -1,10 +1,10 @@
 services:
   redeploy:
     # build context -> comment out when build successfully
-    build:
-      dockerfile: ./Dockerfile
-    # image: redeploy:latest # uncomment, when image is already build with `make build`
+    # build:
+      # dockerfile: ./Dockerfile
+    image: ghcr.io/pik4li/redeploy:latest # uncomment, when image is already build with `make build`
     ports:
       - "1313:1313" # Map container port 1313 to host port 8080
     env_file:
-      - .test.env
+      - .env
